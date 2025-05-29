@@ -14,7 +14,7 @@ class APIService {
     self.urlString = urlString
   }
   
-  func getJSON() async throws(APIError) -> Joke {
+    func getJSON<T: Decodable>() async throws(APIError) -> T {
     guard let url = URL(string: urlString) else {
       throw .invalidURL
     }
@@ -26,7 +26,7 @@ class APIService {
       }
       let decoder = JSONDecoder()
       do {
-        let decodedData = try decoder.decode(Joke.self, from: data)
+        let decodedData = try decoder.decode(T.self, from: data)
         return decodedData
       } catch {
         throw APIError.decodingError(error.localizedDescription)
