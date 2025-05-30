@@ -48,7 +48,7 @@ struct JokeView: View {
               case .dad:
                   Text(joke.joke ?? "")
               case .none:
-                  Text("")
+                  Text(joke.joke ?? "")
               }
             }
           }

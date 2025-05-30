@@ -10,7 +10,7 @@ enum Category: String, Codable, CaseIterable, Identifiable {
   case `Any`, Programming, Misc, Dark, Pun, Dad, Spooky, Christmas
   var id: Self { self }
   
-  var emoji: String {
+  var emoji: String? {
     switch self {
     case .Any: return ""
     case .Programming: return "🤖"

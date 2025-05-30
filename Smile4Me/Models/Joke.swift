@@ -13,7 +13,7 @@ enum JokeID: Hashable {
 
 struct Joke: Codable, Equatable {
   let id: JokeID
-  let category: Category?
+  var category: Category?
   var type: JokeType?
   let lang: Language?
   let setup: String?
@@ -30,7 +30,7 @@ struct Joke: Codable, Equatable {
     case .dad:
         return joke ?? ""
     case .none:
-        return ""
+        return joke ?? ""
     }
       
   }
