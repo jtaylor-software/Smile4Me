@@ -48,7 +48,7 @@ struct TranslationView: View {
             translationService.translatedText = ""
         }
         if let langCode = targetLanguage.languageCode,
-           "\(langCode)" != joke.lang.rawValue,
+           "\(langCode)" != joke.lang?.rawValue,
            translationService.translatedText.isEmpty {
             HStack {
                 Button("Translate", systemImage: "translate") {

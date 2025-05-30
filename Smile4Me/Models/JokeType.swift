@@ -7,5 +7,5 @@
 
 
 enum JokeType: String, Codable {
-  case twopart, single
+  case twopart, single, dad
 }

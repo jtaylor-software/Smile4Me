@@ -24,9 +24,11 @@ struct JokeContentView: View {
                 ScrollView {
                     VStack {
                         HStack {
-                            Picker("Language", selection: $language) {
-                                ForEach(Language.allCases) { language in
-                                    Text(language.full)
+                            if category != .Dad {
+                                Picker("Language", selection: $language) {
+                                    ForEach(Language.allCases) { language in
+                                        Text(language.full)
+                                    }
                                 }
                             }
                             Picker("Category", selection: $category) {
@@ -38,7 +40,11 @@ struct JokeContentView: View {
                         .buttonStyle(.bordered)
                         Button {
                             Task {
-                                await getJoke()
+                                if category == .Dad {
+                                    await getDadJoke()
+                                } else {
+                                    await getJoke()
+                                }
                             }
                         } label: {
                             Image(systemName: "arrow.triangle.2.circlepath")
@@ -59,24 +65,27 @@ struct JokeContentView: View {
                         
                         HStack(alignment: .top) {
                             if let joke {
-                                Button("Report Joke", role: .destructive) {
-                                    let jokeToReport = "\(joke.id)\n\(joke.fullJoke)"
+                                if category != .Dad {
+                                    Button("Report Joke", role: .destructive) {
+                                        let jokeToReport = "\(joke.id)\n\(joke.fullJoke)"
 #if os(macOS)
-                                    let pasteboard = NSPasteboard.general
-                                    pasteboard.declareTypes([.string], owner: nil)
-                                    pasteboard.setString(jokeToReport, forType: .string)
+                                        let pasteboard = NSPasteboard.general
+                                        pasteboard.declareTypes([.string], owner: nil)
+                                        pasteboard.setString(jokeToReport, forType: .string)
 #else
-                                    let pasteboard = UIPasteboard.general
-                                    pasteboard.string = jokeToReport
+                                        let pasteboard = UIPasteboard.general
+                                        pasteboard.string = jokeToReport
 #endif
-                                    guard let url = URL(string: jokeManager.issueURL) else { return }
-                                    openURL(url)
+                                        guard let url = URL(string: jokeManager.issueURL) else { return }
+                                        openURL(url)
+                                    }
+                                    .buttonStyle(.bordered)
+                                    
+                                    Text("You can report an unsafe joke. The Joke id and content will be on your clipboard.")
+                                        .font(.caption)
+                                        .lineLimit(nil)
+                                        .foregroundStyle(.red)
                                 }
-                                .buttonStyle(.bordered)
-                                Text("You can report an unsafe joke. The Joke id and content will be on your clipboard")
-                                    .font(.caption)
-                                    .lineLimit(nil)
-                                    .foregroundStyle(.red)
                             }
                         }
                         .frame(maxWidth: .infinity, alignment: .leading)
@@ -88,7 +97,11 @@ struct JokeContentView: View {
         }
         .firstOnAppear {
             Task {
-                await getJoke()
+                if category == .Dad {
+                    await getDadJoke()
+                } else {
+                    await getJoke()
+                }
             }
         }
         .onChange(of: language) {
@@ -98,7 +111,11 @@ struct JokeContentView: View {
         }
         .onChange(of: category) {
             Task {
-                await getJoke()
+                if category == .Dad {
+                    await getDadJoke()
+                } else {
+                    await getJoke()
+                }
             }
         }
     }
@@ -116,6 +133,22 @@ struct JokeContentView: View {
             )
             withAnimation {
                 self.joke = joke
+            }
+        } catch {
+            errorString = "No joke for \(category) - \(language)"
+        }
+    }
+    func getDadJoke() async {
+        errorString = ""
+        fetching = true
+        defer {
+            fetching = false
+        }
+        do {
+            let joke = try await jokeManager.getDadJoke()
+            withAnimation {
+                self.joke = joke
+                self.joke?.type = .dad
             }
         } catch {
             errorString = "No joke for \(category) - \(language)"

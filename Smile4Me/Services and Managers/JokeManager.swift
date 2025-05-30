@@ -20,9 +20,31 @@ class JokeManager {
         logger.info("\(url)")
         let apiService = APIService(urlString: url)
         do {
-            return try await apiService.getJSON()
+            return try await apiService.getJSON(category: category)
         } catch {
             throw error
         }
     }
+    
+    func getDadJoke() async throws -> Joke {
+        let url = "https://icanhazdadjoke.com/"
+        logger.info("\(url)")
+        let apiService = APIService(urlString: url)
+        do {
+            return try await apiService.getJSON(category: Category.Dad)
+        } catch {
+            throw error
+        }
+    }
+#if os(iOS)
+    func getInfo() async throws -> Info {
+            let url = "https://v2.jokeapi.dev/info"
+            let apiService = APIService(urlString: url)
+            do {
+                return try await apiService.getJSON(category: .Any)
+            } catch {
+                throw error
+            }
+        }
+#endif
 }

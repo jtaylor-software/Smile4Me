@@ -14,12 +14,17 @@ class APIService {
     self.urlString = urlString
   }
   
-    func getJSON<T: Decodable>() async throws(APIError) -> T {
+    func getJSON<T: Decodable>(category: Category) async throws(APIError) -> T {
     guard let url = URL(string: urlString) else {
       throw .invalidURL
     }
     do {
-     let (data, response) = try await URLSession.shared.data(from: url)
+        var request = URLRequest(url: url)
+        if category == .Dad {
+            request.setValue("application/json", forHTTPHeaderField: "Accept")
+        }
+        
+        let (data, response) = try await URLSession.shared.data(for: request)
       guard let httpResponse = response as? HTTPURLResponse,
             httpResponse.statusCode == 200 else {
           throw APIError.invalidResponseStatus

@@ -25,7 +25,7 @@ struct JokeView: View {
       } else {
         if let joke {
           HStack(alignment: .top) {
-            Text(joke.category.emoji)
+              Text(joke.category?.emoji ?? "🤪")
               .font(.system(size: 60))
             VStack(alignment: .leading) {
               switch joke.type {
@@ -45,6 +45,10 @@ struct JokeView: View {
                 }
               case .single:
                 Text(joke.joke ?? "")
+              case .dad:
+                  Text(joke.joke ?? "")
+              case .none:
+                  Text("")
               }
             }
           }
