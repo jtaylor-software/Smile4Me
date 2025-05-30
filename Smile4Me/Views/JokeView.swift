@@ -69,9 +69,13 @@ struct JokeView: View {
 }
 
 #Preview("Single") {
-  JokeView(joke: Joke.single, errorString: "")
+  JokeView(joke: .single, errorString: "")
 }
 
 #Preview("Twopart") {
   JokeView(joke: .twoPart, errorString: "")
+}
+
+#Preview("Dad") {
+    JokeView(joke: .dad, errorString: "")
 }

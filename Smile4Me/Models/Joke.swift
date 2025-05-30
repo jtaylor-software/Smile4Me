@@ -54,6 +54,15 @@ struct Joke: Codable, Equatable {
     delivery: "Hot, because you can catch a cold.",
     joke: nil
   )
+    static let dad = Joke(
+        id: JokeID.int(3),
+        category: .Dad,
+        type: .dad,
+        lang: nil,
+        setup: nil,
+        delivery: nil,
+        joke: "“My Dog has no nose.” How does he smell?” “Awful”"
+    )
 }
 
 extension JokeID: Codable {
